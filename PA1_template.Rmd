@@ -7,19 +7,76 @@ output:
 
 
 ## Loading and preprocessing the data
-
-
-
+```{r}
+library(data.table)
+data <- fread("./activity.csv", na.strings = c('NA'), header=TRUE)
+clean <- data[complete.cases(data),]
+```
 ## What is mean total number of steps taken per day?
+```{r}
+sumByDate <- tapply(clean$steps, clean$date, FUN=sum)
+hist(sumByDate, col="red", main="Histogram of Total Steps Each Day", xlab="Total Number of Steps Taken Each Day")
 
+meanSteps <- format(mean(sumByDate), scientific=FALSE)
+medianSteps <- median(sumByDate)
+```
 
+The mean number of steps taken per day is `r meanSteps`.  
+The median number of steps taken per day is `r medianSteps`.
 
 ## What is the average daily activity pattern?
+```{r}
+avgByTimePeriod <- as.data.frame(tapply(clean$steps, clean$interval, FUN=mean))
+avgByTimePeriod <- cbind(Row.Names = rownames(avgByTimePeriod), avgByTimePeriod)
+setnames(avgByTimePeriod, c("interval","mean"))
+#lines(avgByTimePeriod, type="l") 
 
+plot(rownames(avgByTimePeriod), 
+     avgByTimePeriod$mean, 
+     type="l", 
+     xaxt="n",
+     main="Average Number of Steps per 5 Minute Interval", 
+     xlab="Minute",
+     ylab="Average Number of Steps")
+axis(1, at = seq(0, 22400, by = 100), las=2)
 
+maxInterval <- rownames(which(avgByTimePeriod$mean == max(avgByTimePeriod$mean), arr.ind=TRUE)) 
+maxAvgSteps <- max(avgByTimePeriod$mean)
+```
+The 5 minute interval at `r maxInterval` contains the maximum average number of steps across all the days in the dataset with a value of `r maxAvgSteps`.
 
 ## Imputing missing values
+```{r}
+numMissingSteps <- sum(is.na(data$steps))
+```
+There are `r numMissingSteps` rows missing the number of steps.
+
+## What is mean total number of steps taken per day with missing steps set to the average for the time period?
+```{r}
+
+#Need to convert to character for merge.
+tempData <- data[,interval:=as.character(interval)]
+addedTimePeriodAvg <- merge(tempData,avgByTimePeriod, by="interval")
+
+#replace the step column with the avg if the value is na.
+noNA <- as.data.frame(replace(addedTimePeriodAvg$steps, is.na(addedTimePeriodAvg$steps), addedTimePeriodAvg$mean[is.na(addedTimePeriodAvg$steps)]))
+#add the noNA column to the avg dataframe
+# this isn't correct.  all NAs for that same interval should have the same value.
+noNA2 <- cbind(addedTimePeriodAvg, noNA)
+setnames(noNA2, c("interval","steps", "date", "mean", "replaceNA"))
+
+finalNoNA <-subset(noNA2, select = c(replaceNA, date, interval))
+setnames(finalNoNA, c("steps", "date", "interval"))
 
 
+sumByDateImputing <- tapply(finalNoNA$steps, finalNoNA$date, FUN=sum)
+hist(sumByDateImputing, col="red", main="Histogram of Total Steps Each Day (Imputing missing values)", xlab="Total Number of Steps Taken Each Day")
+
+meanStepsImputing <- format(mean(sumByDateImputing), scientific=FALSE)
+medianStepsImputing <- format(median(sumByDateImputing), scientific=FALSE)
+```
+
+The mean number of steps taken per day (after imputing) is `r meanStepsImputing`.  
+The median number of steps taken per day (after imputing) is `r medianStepsImputing`.
 
 ## Are there differences in activity patterns between weekdays and weekends?
