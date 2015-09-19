@@ -76,9 +76,7 @@ The median number of steps taken per day (after imputing) is `r medianStepsImput
 These values are the same as the mean value when NAs have been removed.  Since the missing NAs were for entire days, adding the mean of the interval for each interval/day combination maintained did not shift the mean value.  The mean was effectively added 8 times and did not have an effect on the new mean.  The median was shifted closer to the mean (actually exactly) since more entries were added at the mean.
 
 ## Are there differences in activity patterns between weekdays and weekends?
-### Weekend
 ```{r echo = TRUE}
-#library(lattice)
 replacedNA$date <- as.Date(replacedNA$date)
 weekdays1 <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
 replacedNA$wDay <- factor((weekdays(replacedNA$date) %in% weekdays1), 
@@ -87,22 +85,6 @@ meanByWDay <- tapply(replacedNA$steps, list(replacedNA$interval, replacedNA$wDay
 meanByWDay.df <- data.frame(meanByWDay)
 meanByWDay.df <- cbind(Row.Names = as.numeric(rownames(meanByWDay.df)), meanByWDay.df)
 neworder <- meanByWDay.df[order(meanByWDay.df$Row.Names),]
-
-#px1 = xyplot(weekend ~ Row.Names,neworder, 
- #            type="l", 
-  #           main="Average Number of Steps per 5 Minute Interval for Weekends", 
-   #          xlab="Minute",
-    #         ylab="Average Number of Steps (Weekend)")
-#px2 = xyplot(weekday ~ Row.Names,neworder, 
- #            type="l",
-  #           main="Average Number of Steps per 5 Minute Interval for Weekdays", 
-   #          xlab="Minute",
-    #         ylab="Average Number of Steps (Weekday)")
-
-# arrange the two plots vertically
-#print(px1, position=c(0, .6, 1, 1), more=TRUE)
-#print(px2, position=c(0, 0, 1, .4))
-
 
 par(mfrow = c(2,1))
 
@@ -121,7 +103,7 @@ plot(rownames(neworder),
      xaxt="n",
      main="Average Number of Steps per 5 Minute Interval for Weekdays", 
      xlab="Minute",
-     ylab="#Steps (Weekday)")
+     ylab="# Steps (Weekday)")
 axis(1, at = seq(0, 2400, by = 100), las=2)
 
 ```
