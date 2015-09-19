@@ -90,7 +90,7 @@ These values are the same as the mean value when NAs have been removed.  Since t
 ### Weekend
 
 ```r
-library(lattice)
+#library(lattice)
 replacedNA$date <- as.Date(replacedNA$date)
 weekdays1 <- c('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday')
 replacedNA$wDay <- factor((weekdays(replacedNA$date) %in% weekdays1), 
@@ -100,12 +100,41 @@ meanByWDay.df <- data.frame(meanByWDay)
 meanByWDay.df <- cbind(Row.Names = as.numeric(rownames(meanByWDay.df)), meanByWDay.df)
 neworder <- meanByWDay.df[order(meanByWDay.df$Row.Names),]
 
-px1 = xyplot(weekend ~ Row.Names,neworder, type="l")
-px2 = xyplot(weekday ~ Row.Names,neworder, type="l")
+#px1 = xyplot(weekend ~ Row.Names,neworder, 
+ #            type="l", 
+  #           main="Average Number of Steps per 5 Minute Interval for Weekends", 
+   #          xlab="Minute",
+    #         ylab="Average Number of Steps (Weekend)")
+#px2 = xyplot(weekday ~ Row.Names,neworder, 
+ #            type="l",
+  #           main="Average Number of Steps per 5 Minute Interval for Weekdays", 
+   #          xlab="Minute",
+    #         ylab="Average Number of Steps (Weekday)")
 
 # arrange the two plots vertically
-print(px1, position=c(0, .6, 1, 1), more=TRUE)
-print(px2, position=c(0, 0, 1, .4))
+#print(px1, position=c(0, .6, 1, 1), more=TRUE)
+#print(px2, position=c(0, 0, 1, .4))
+
+
+par(mfrow = c(2,1))
+
+plot(rownames(neworder), 
+     neworder$weekend, 
+     type="l", 
+     xaxt="n",
+     main="Average Number of Steps per 5 Minute Interval for Weekends", 
+     xlab="Minute",
+     ylab="# Steps (Weekend)")
+axis(1, at = seq(0, 2400, by = 100), las=2)
+
+plot(rownames(neworder), 
+     neworder$weekday, 
+     type="l", 
+     xaxt="n",
+     main="Average Number of Steps per 5 Minute Interval for Weekdays", 
+     xlab="Minute",
+     ylab="#Steps (Weekday)")
+axis(1, at = seq(0, 2400, by = 100), las=2)
 ```
 
 ![](./PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
