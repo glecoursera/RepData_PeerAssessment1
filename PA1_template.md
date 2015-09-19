@@ -35,7 +35,7 @@ plot(rownames(avgByTimePeriod),
      type="l", 
      xaxt="n",
      main="Average Number of Steps per 5 Minute Interval", 
-     xlab="Minute",
+     xlab="Interval",
      ylab="Average Number of Steps")
 axis(1, at = seq(0, 2400, by = 100), las=2)
 ```
@@ -105,7 +105,7 @@ plot(rownames(neworder),
      type="l", 
      xaxt="n",
      main="Average Number of Steps per 5 Minute Interval for Weekends", 
-     xlab="Minute",
+     xlab="Interval",
      ylab="# Steps (Weekend)")
 axis(1, at = seq(0, 2400, by = 100), las=2)
 
@@ -114,7 +114,7 @@ plot(rownames(neworder),
      type="l", 
      xaxt="n",
      main="Average Number of Steps per 5 Minute Interval for Weekdays", 
-     xlab="Minute",
+     xlab="Interval",
      ylab="# Steps (Weekday)")
 axis(1, at = seq(0, 2400, by = 100), las=2)
 ```
