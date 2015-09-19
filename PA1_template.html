@@ -99,7 +99,7 @@ maxAvgSteps &lt;- max(avgByTimePeriod$mean)</code></pre>
 tempData &lt;- data[,interval:=as.character(interval)]
 addedTimePeriodAvg &lt;- merge(tempData,avgByTimePeriod, by=&quot;interval&quot;)
 
-#replace the step column with the avg if the value is na.
+#replace the step column with the mean for the interval if the value is NA
 replacedNA &lt;- as.data.frame(replace(addedTimePeriodAvg$steps, is.na(addedTimePeriodAvg$steps), addedTimePeriodAvg$mean[is.na(addedTimePeriodAvg$steps)]))
 replacedNA &lt;- cbind(addedTimePeriodAvg, replacedNA)
 setnames(replacedNA, c(&quot;interval&quot;,&quot;steps&quot;, &quot;date&quot;, &quot;mean&quot;, &quot;replaceNA&quot;))

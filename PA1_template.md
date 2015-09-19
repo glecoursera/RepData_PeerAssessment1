@@ -62,7 +62,7 @@ There are 2305 rows missing the number of steps.
 tempData <- data[,interval:=as.character(interval)]
 addedTimePeriodAvg <- merge(tempData,avgByTimePeriod, by="interval")
 
-#replace the step column with the avg if the value is na.
+#replace the step column with the mean for the interval if the value is NA
 replacedNA <- as.data.frame(replace(addedTimePeriodAvg$steps, is.na(addedTimePeriodAvg$steps), addedTimePeriodAvg$mean[is.na(addedTimePeriodAvg$steps)]))
 replacedNA <- cbind(addedTimePeriodAvg, replacedNA)
 setnames(replacedNA, c("interval","steps", "date", "mean", "replaceNA"))
